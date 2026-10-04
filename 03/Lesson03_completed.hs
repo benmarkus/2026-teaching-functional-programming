@@ -6,31 +6,41 @@ import Prelude hiding ((^))
 
 -- Definiáljuk azt a fv-t, ami megcseréli a @ és # jeleket, minden mást nem változtat
 -- A megoldás mellé add meg a függvény típusszignatúráját is!
-switchAtSignWithHashtag = undefined
+switchAtSignWithHashtag :: Char -> Char
+switchAtSignWithHashtag '@'= '#'
+switchAtSignWithHashtag '#'= '@'
+switchAtSignWithHashtag  x = x
+
 
 -- Definiáljuk mintaillesztéssel azt a függvényt, amely a 3. Bool paraméter megfordítottját adja vissza, ha az első 2 Bool paraméter megegyezik, más esetben változatlanul adjuk vissza a 3. paramétert
 flipThirdIfFirstTwoAreSame :: Bool -> Bool -> Bool -> Bool
-flipThirdIfFirstTwoAreSame = undefined
+flipThirdIfFirstTwoAreSame True True x = not x
+flipThirdIfFirstTwoAreSame False False x = not x
+flipThirdIfFirstTwoAreSame _ _ x = x
 
 -- A klasszikus matematikai logikai műveletek segítségével (not, ||, &&) állítsuk elő az implikáció (⟹)-t leíró fv-t
 -- A megoldás mellé add meg a függvény típusszignatúráját is!
-implies = undefined
+implies :: Bool -> Bool -> Bool
+implies a b = (not a) || b
 
 -- Tegyük meg ugyanezt most a klasszikus mat. logikai műveletek NÉLKÜL, mintaillesztést használva
 -- A megoldás mellé add meg a függvény típusszignatúráját is!
-implies' = undefined
+implies' :: Bool -> Bool -> Bool
+implies' True False = False
+implies' _ _ = True
 
 -- Definiáljuk azt a fv-t, ami eldönti egy Int-ről, hogy páros-e (hint: használjuk az osztási maradék (mod) prefix függvényt infix módon)
 isEven :: Integer -> Bool
-isEven = undefined
+isEven x = x `mod` 2 == 0
 
 -- Definiáljuk a művelet párját is, tetszőleges módon
 isOdd :: Integer -> Bool
-isOdd = undefined
+isOdd x = not (isEven x) 
 
 -- Definiáljuk azt a fv-t, ami eldönti, hogy az első paraméter (pozitív) osztója-e a másodiknak
 -- A megoldás mellé add meg a függvény típusszignatúráját is!
-divides = undefined
+divides :: Integer -> Integer -> Bool
+divides x y = (y `mod` x) == 0
 
 ----------------------------------
 -- Guardok (őrjelek)
@@ -45,11 +55,11 @@ Mi a helyzet a számoknál? Nézzük meg:
 
 -- Definiáljuk azt a fv-t, ami a 10-nél kisebb és -10-nél nagyobb egész számokra True-t ad vissza, minden másra False-t
 isOneDigit :: Integer -> Bool
-isOneDigit = undefined
+isOneDigit x = (-10) < x && x < 10
 
 -- Definiáljuk azt a fv-t, ami a 100-nál kisebb és -100-nál nagyobb egész számokra ad True-t, minden másra False-t
 isLessThanHundred :: Integer -> Bool
-isLessThanHundred = undefined
+isLessThanHundred x = (-100) < x && x < 100
 
 -- Ügyesen kihasználtuk a Bool műveletek tulajdonságait, de mitévők leszünk, ha nem Bool visszatérésű a fv?
 
@@ -58,14 +68,22 @@ isLessThanHundred = undefined
 -- 10 - 99:     X
 -- 100 - 999:   C
 -- 1000 - 3999: M
-
+-- felette:     E
 romanOrderOfMagnitude :: Int -> Char
-romanOrderOfMagnitude = undefined
+romanOrderOfMagnitude x
+  | (1 <= x) && (x < 10) = 'I'
+  | (10 <= x) && (x < 100) = 'X'
+  | (100 <= x) && (x < 1000) = 'C'
+  | (1000 <= x) && (x < 4000) = 'M'
+  | otherwise = 'E'
 
 -- A gyakorlórészben megírt divides függvényt fejlesztjük tovább,
 -- most már csak a pozitív valódi osztókat fogadjuk el (tehát 1 és önmaga már False-t dobjon)
 isRealPositiveDivisorOf :: Integer -> Integer -> Bool
-isRealPositiveDivisorOf = undefined
+isRealPositiveDivisorOf x y
+  | x <= 0 = False
+  | x == 1 || x == y = False
+  | otherwise = divides x y
 
 {-
 Használjuk egy új nyelvi elemet, a guard-ot (őrjel) az AltGr + W kombinációval elérhető | ("pipe") szimbólummal.
@@ -81,7 +99,12 @@ Az alsó sorban szokás kitenni egy otherwise-t (ez igazából egy szinonímája
 -- ha osztható 5-tel (de nem 15-tel): "Buzz"
 -- ha egyik eset sem teljesül, akkor üres string
 fizzBuzz :: Integer -> String
-fizzBuzz = undefined
+fizzBuzz x
+  | x `mod` 15 == 0 = "FizzBuzz"
+  | x `mod` 3 == 0 = "Fizz"
+  | x `mod` 5 == 0 = "Buzz"
+fizzBuzz _ = ""
+
 
 -- Definiáljuk azt a fv-t, ami egy életkorhoz (Int) magyar nyelvű kategóriát rendel:
 -- 0-2: "csecsemő", 3-12: "gyerek", 13-17: "tinédzser", 18-64: "felnőtt", 65+: "idős"
@@ -112,7 +135,9 @@ Ha a ciklushoz nem használhatunk efféle eszközöket, akkor hogy valósítjuk 
 Megintcsak gondoljunk a matematikára, speciálisan a faktoriálisra. Mi a faktoriális definíciója?
 -}
 factorial :: Integer -> Integer
-factorial = undefined
+factorial 1 = 1
+factorial n = n * factorial (n - 1)
+
 
 -- Definíció:
 -- Rekurzív függvény: Olyan függvény, amely önmaga definiálásához saját magát használja fel.
@@ -124,7 +149,9 @@ factorial = undefined
 
 -- Definiáljuk azt a rekurzív függvényt, ami visszaadja az n-edik Fibonacci-számot
 fibonacci :: Integer -> Integer
-fibonacci = undefined
+fibonacci 1 = 1
+fibonacci 2 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
 
 -- Definiáljuk azt a rekurzív függvényt, ami összeadja n-ig a számokat
 sumTo :: Integer -> Integer
